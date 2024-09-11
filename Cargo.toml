@@ -10,16 +10,19 @@ license = "MIT"
 anyhow = "1.0.87"
 thiserror = "1.0.63"
 tracing-appender = "0.2.3"
-
-[dev-dependencies]
-serde = "1.0.210"
-axum = { version = "0.7.5", features = ["http2", "query", "tracing"] }
-tokio = { version = "1.40.0", features = [
+tokio = { version = "1.38.0", features = [
     "rt",
     "rt-multi-thread",
     "net",
     "macros",
 ] }
+derive_builder = "0.20.1"
+chrono = "0.4.38"
+
+[dev-dependencies]
+serde = "1.0.210"
+axum = { version = "0.7.5", features = ["http2", "query", "tracing"] }
+
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 serde_json = "1.0.128"
