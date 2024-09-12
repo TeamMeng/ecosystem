@@ -30,3 +30,4 @@ tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 serde_json = "1.0.128"
 http = "1.1.0"
+bytes = "1.7.1"
