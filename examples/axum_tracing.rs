@@ -54,6 +54,6 @@ async fn long_task() -> &'static str {
     let start = Instant::now();
     sleep(Duration::from_millis(112)).await;
     let elapsed = start.elapsed().as_millis() as u64;
-    warn!(app.task_durtaion = elapsed, "task take too long");
+    warn!(app.task_duration = elapsed, "task take too long");
     "Hello World"
 }
