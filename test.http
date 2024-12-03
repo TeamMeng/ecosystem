@@ -25,3 +25,14 @@ Content-Type: application/json
 
 ### url redirect
 GET http://localhost:9876/rveh9v
+
+### proxy handler
+GET http://localhost:6193/health
+# get ->  HTTP/1.1 200 OK
+# content-type: text/plain; charset=utf-8
+# content-length: 48
+# Date: Tue, 03 Dec 2024 11:50:25 GMT
+# Name: Jack
+# Connection: keep-alive
+
+# Up, answered from 0.0.0.0:3000 with 0.0.0.0:6193
