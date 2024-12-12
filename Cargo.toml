@@ -7,10 +7,10 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.93"
+anyhow = "1.0.94"
 thiserror = "1.0.69"
 tracing-appender = "0.2.3"
-tokio = { version = "1.41.1", features = [
+tokio = { version = "1.42.0", features = [
     "rt",
     "rt-multi-thread",
     "net",
@@ -18,8 +18,8 @@ tokio = { version = "1.41.1", features = [
     "fs",
 ] }
 derive_builder = "0.20.2"
-chrono = { version = "0.4.38", features = ["serde"] }
-serde = { version = "1.0.215", features = ["derive"] }
+chrono = { version = "0.4.39", features = ["serde"] }
+serde = { version = "1.0.216", features = ["derive"] }
 base64 = "0.22.1"
 chacha20poly1305 = "0.10.1"
 serde_with = "3.11.0"
@@ -40,12 +40,12 @@ async-trait = "0.1.83"
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 serde_json = "1.0.133"
-http = "1.1.0"
+http = "1.2.0"
 bytes = "1.9.0"
 blake3 = "1.5.5"
 dashmap = "6.1.0"
-tokio-stream = "0.1.16"
-tokio-util = { version = "0.7.12", features = ["codec"] }
+tokio-stream = "0.1.17"
+tokio-util = { version = "0.7.13", features = ["codec"] }
 futures = "0.3.31"
 console-subscriber = "0.4.1"
 nanoid = "0.4.0"
@@ -55,3 +55,4 @@ pingora-load-balancing = "0.4.0"
 pingora-http = "0.4.0"
 log = "0.4.22"
 env_logger = "0.11.5"
+sysinfo = "0.33.0"
