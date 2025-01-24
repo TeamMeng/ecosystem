@@ -29,7 +29,7 @@ fn main() {
         let target_process = system
             .processes()
             .values()
-            .find(|process| process.name().to_ascii_lowercase() == "google chrome");
+            .find(|process| process.name().eq_ignore_ascii_case("google chrome"));
 
         match target_process {
             Some(process) => {
