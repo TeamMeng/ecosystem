@@ -36,3 +36,47 @@ GET http://localhost:6193/health
 # Connection: keep-alive
 
 # Up, answered from 0.0.0.0:3000 with 0.0.0.0:6193
+
+### validate valid
+POST http://localhost:8080/hello_user
+Content-Type: application/json
+
+{
+    "name": "Meng",
+    "age": 20,
+    "email": "Meng@123.com",
+    "my_address": "四川成都"
+}
+
+### validate name invalid
+POST http://localhost:8080/hello_user
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "age": 20,
+    "email": "Meng@123.com",
+    "my_address": "四川成都"
+}
+
+### validate email invalid
+POST http://localhost:8080/hello_user
+Content-Type: application/json
+
+{
+    "name": "Meng",
+    "age": 20,
+    "email": "Meng",
+    "my_address": "四川成都"
+}
+
+### validate age invalid
+POST http://localhost:8080/hello_user
+Content-Type: application/json
+
+{
+    "name": "Meng",
+    "age": 17,
+    "email": "Meng",
+    "my_address": "四川成都"
+}
