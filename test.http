@@ -80,3 +80,14 @@ Content-Type: application/json
     "email": "Meng",
     "my_address": "四川成都"
 }
+
+### axum next
+GET http://localhost:8080
+
+# HTTP/1.1 200 OK
+# content-type: text/plain; charset=utf-8
+# server-time: 42us
+# content-length: 5
+# date: Mon, 03 Feb 2025 11:23:36 GMT
+
+# Hello
