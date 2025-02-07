@@ -6,16 +6,28 @@ license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "server"
+path = "./src/server.rs"
+
+[[bin]]
+name = "client1"
+path = "./src/client1.rs"
+
+[[bin]]
+name = "client2"
+path = "./src/client2.rs"
+
 [dependencies]
 anyhow = "1.0.94"
 thiserror = "1.0.69"
 tracing-appender = "0.2.3"
 tokio = { version = "1.42.0", features = [
-    "rt",
-    "rt-multi-thread",
-    "net",
-    "macros",
-    "fs",
+  "rt",
+  "rt-multi-thread",
+  "net",
+  "macros",
+  "fs",
 ] }
 derive_builder = "0.20.2"
 chrono = { version = "0.4.39", features = ["serde"] }
@@ -24,13 +36,24 @@ base64 = "0.22.1"
 chacha20poly1305 = "0.10.1"
 serde_with = "3.11.0"
 sqlx = { version = "0.8.2", features = [
-    "postgres",
-    "runtime-tokio",
-    "tls-rustls",
+  "postgres",
+  "runtime-tokio",
+  "tls-rustls",
 ] }
-axum = { version = "0.7.9", features = ["http2", "query", "tracing", "multipart"] }
+axum = { version = "0.7.9", features = [
+  "http2",
+  "query",
+  "tracing",
+  "multipart",
+] }
 async-trait = "0.1.83"
 validator = { version = "0.20.0", features = ["derive"] }
+prost = "0.13.4"
+tonic = "0.12.3"
+tower = { version = "0.5.2", features = ["timeout", "util"] }
+tonic-web = "0.12.3"
+hyper-util = "0.1.10"
+tower-http = { version = "0.6.2", features = ["trace", "cors", "compression-gzip", "timeout"] }
 
 [dev-dependencies]
 tracing = "0.1.41"
@@ -54,3 +77,6 @@ env_logger = "0.11.5"
 sysinfo = "0.33.0"
 deadpool-postgres = "0.14.1"
 whoami = "1.5.2"
+
+[build-dependencies]
+tonic-build = "0.12.3"
