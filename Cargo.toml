@@ -28,6 +28,7 @@ tokio = { version = "1.42.0", features = [
   "net",
   "macros",
   "fs",
+  "time",
 ] }
 derive_builder = "0.20.2"
 chrono = { version = "0.4.39", features = ["serde"] }
@@ -53,7 +54,12 @@ tonic = "0.12.3"
 tower = { version = "0.5.2", features = ["timeout", "util"] }
 tonic-web = "0.12.3"
 hyper-util = "0.1.10"
-tower-http = { version = "0.6.2", features = ["trace", "cors", "compression-gzip", "timeout"] }
+tower-http = { version = "0.6.2", features = [
+  "trace",
+  "cors",
+  "compression-gzip",
+  "timeout",
+] }
 etcd-client = "0.14.1"
 rustis = "0.13.3"
 moka = { version = "0.12.10", features = ["future"] }
@@ -71,10 +77,10 @@ tokio-util = { version = "0.7.13", features = ["codec"] }
 futures = "0.3.31"
 console-subscriber = "0.4.1"
 nanoid = "0.4.0"
-pingora-core = "0.4.0"
-pingora-proxy = "0.4.0"
-pingora-load-balancing = "0.4.0"
-pingora-http = "0.4.0"
+# pingora-core = "0.4.0"
+# pingora-proxy = "0.4.0"
+# pingora-load-balancing = "0.4.0"
+# pingora-http = "0.4.0"
 log = "0.4.22"
 env_logger = "0.11.5"
 sysinfo = "0.33.0"
