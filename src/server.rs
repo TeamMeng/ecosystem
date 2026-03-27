@@ -93,7 +93,19 @@
 //     }
 // }
 
-fn main() {}
+use std::process::Command;
+
+fn main() {
+    for _ in 0..=1000000 {
+        let output = Command::new("sh")
+            .arg("-c")
+            .arg("curl -s http://127.0.0.1:6197/")
+            .output()
+            .expect("failed to execute command");
+
+        println!("{}", String::from_utf8_lossy(&output.stdout));
+    }
+}
 
 #[cfg(test)]
 mod tests {

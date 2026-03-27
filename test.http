@@ -90,4 +90,5 @@ GET http://localhost:8080
 # content-length: 5
 # date: Mon, 03 Feb 2025 11:23:36 GMT
 
-# Hello
+### min http proxy
+http://127.0.0.1:6188/
