@@ -11,13 +11,13 @@ use std::{sync::Arc, time::Duration};
 ///
 /// 本示例演示如何创建一个带有 TCP 健康检查的负载均衡代理，
 /// 自动检测后端服务器健康状态，只将请求转发给健康的后端。
-struct HCLB {
+struct Hclb {
     /// 负载均衡器，使用轮询（RoundRobin）策略选择后端
     upstreams: Arc<LoadBalancer<RoundRobin>>,
 }
 
 #[async_trait]
-impl ProxyHttp for HCLB {
+impl ProxyHttp for Hclb {
     type CTX = ();
     fn new_ctx(&self) -> Self::CTX {}
 
@@ -71,7 +71,7 @@ fn main() {
     let upstreams = hc_service.task();
 
     // 4. 使用负载均衡器创建代理服务
-    let mut proxy = http_proxy_service(&server.configuration, HCLB { upstreams });
+    let mut proxy = http_proxy_service(&server.configuration, Hclb { upstreams });
     proxy.add_tcp("0.0.0.0:6197");
 
     // 5. 将服务添加到服务器

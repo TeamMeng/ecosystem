@@ -34,9 +34,7 @@ impl ProxyHttp for RateLimitedProxy {
     type CTX = ();
 
     /// 创建新的上下文实例
-    fn new_ctx(&self) -> Self::CTX {
-        ()
-    }
+    fn new_ctx(&self) -> Self::CTX {}
 
     /// 选择上游对等节点
     ///
