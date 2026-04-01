@@ -58,6 +58,7 @@ async fn main() -> Result<()> {
         .queue_declare(
             ShortString::from("notify_queue"),
             QueueDeclareOptions {
+                // durable: true 表示队列在服务器重启后仍然存在，sync持久化数据
                 durable: true,
                 ..Default::default()
             },
