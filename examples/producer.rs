@@ -43,6 +43,7 @@ async fn main() -> Result<()> {
             ExchangeKind::Topic,
             ExchangeDeclareOptions {
                 durable: true,
+                auto_delete: false, // auto_delete: false 表示交换机不会在没有绑定队列时自动删除
                 ..Default::default()
             },
             FieldTable::default(),
