@@ -1477,6 +1477,7 @@ dependencies = [
  "chrono",
  "console-subscriber",
  "crossbeam",
+ "crossbeam-channel",
  "crossbeam-utils",
  "dashmap",
  "deadpool-postgres",

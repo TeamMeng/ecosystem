@@ -95,6 +95,7 @@ deadpool-postgres = "0.14.1"
 whoami = "1.5.2"
 crossbeam = "0.8.4"
 crossbeam-utils = "0.8.21"
+crossbeam-channel = "0.5.15"
 
 [build-dependencies]
 tonic-build = "0.12.3"
