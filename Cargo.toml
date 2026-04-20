@@ -97,6 +97,7 @@ crossbeam = "0.8.4"
 crossbeam-utils = "0.8.21"
 crossbeam-channel = "0.5.15"
 crossbeam-epoch = "0.9.18"
+crossbeam-deque = "0.8.6"
 
 [build-dependencies]
 tonic-build = "0.12.3"

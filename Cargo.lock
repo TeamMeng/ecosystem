@@ -1478,6 +1478,7 @@ dependencies = [
  "console-subscriber",
  "crossbeam",
  "crossbeam-channel",
+ "crossbeam-deque",
  "crossbeam-epoch",
  "crossbeam-utils",
  "dashmap",
