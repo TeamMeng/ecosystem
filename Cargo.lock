@@ -1478,6 +1478,7 @@ dependencies = [
  "console-subscriber",
  "crossbeam",
  "crossbeam-channel",
+ "crossbeam-epoch",
  "crossbeam-utils",
  "dashmap",
  "deadpool-postgres",
