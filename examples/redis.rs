@@ -1,29 +1,26 @@
 use anyhow::Result;
-use rustis::{
-    client::Client,
-    commands::{GenericCommands, StringCommands},
-};
+use redis::AsyncCommands;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::connect("127.0.0.1:6379").await?;
+    let client = redis::Client::open(
+        "redis://127.0.0.1:6379
+",
+    )?;
 
-    client.set("key", "value").await?;
+    let mut conn = client.get_multiplexed_async_connection().await?;
 
-    let value: String = client.get("key").await?;
-    println!("value: {}", value);
+    let _: () = conn.set("name", "meng").await?;
 
-    let v = client.del("key").await?;
-    println!("v: {}", v);
+    let name: String = conn.get("name").await?;
+    println!("name={}", name);
 
-    let value: String = client.get("key").await?;
-    println!("value: {}", value);
+    let _: () = conn.set("counter", 1).await?;
+    let value: i32 = conn.get("counter").await?;
+    println!("value={}", value);
 
-    client.set("key", 200).await?;
-    client.decr("key").await?;
-
-    let value: String = client.get("key").await?;
-    println!("value: {}", value);
+    let new_value: i32 = conn.incr("counter", 1).await?;
+    println!("counter after incr={}", new_value);
 
     Ok(())
 }
