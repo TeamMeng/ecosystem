@@ -99,6 +99,7 @@ crossbeam-channel = "0.5.15"
 crossbeam-epoch = "0.9.18"
 crossbeam-deque = "0.8.6"
 redis = { version = "1.2.0", features = ["tokio-comp"] }
+candle-core = { version = "0.10.2", features = ["metal"] }
 
 [build-dependencies]
 tonic-build = "0.12.3"
