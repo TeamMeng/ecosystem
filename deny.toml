@@ -95,7 +95,7 @@ ignore = [
 allow = [
   "MIT",
   "Apache-2.0",
-  "MPL-2.0",
+  "MIT-0",
   "BSD-2-Clause",
   "BSD-3-Clause",
   "ISC",
@@ -238,7 +238,7 @@ unknown-git = "warn"
 # if not specified. If it is specified but empty, no registries are allowed.
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
 # List of URLs for allowed Git repositories
-allow-git = []
+allow-git = ["https://github.com/hi-liyan/aliyun-sms-sdk.git"]
 
 [sources.allow-org]
 # github.com organizations to allow git sources for
