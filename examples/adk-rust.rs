@@ -5,9 +5,6 @@ use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    dotenvy::dotenv().ok();
-
-    // 要求：ollama serve && ollama pull llama3.2
     let model = OllamaModel::new(OllamaConfig::new("llama3.2"))?;
 
     let agent = LlmAgentBuilder::new("assistant")
