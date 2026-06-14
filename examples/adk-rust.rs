@@ -1,5 +1,4 @@
-use adk_rust::prelude::*;
-use adk_rust::Launcher;
+use adk_rust::{prelude::*, Launcher};
 use anyhow::Result;
 use std::sync::Arc;
 
