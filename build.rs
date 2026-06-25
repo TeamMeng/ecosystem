@@ -1,5 +1,6 @@
 fn main() {
     tonic_build::configure()
-        .compile_protos(&["proto/helloworld.proto"], &["proto"])
+        .out_dir("src")
+        .compile_protos(&["proto/hello.proto"], &["proto"])
         .unwrap();
 }
