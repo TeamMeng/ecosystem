@@ -2,18 +2,15 @@ use anyhow::Result;
 use axum::{routing::post, Json, Router};
 use serde::Deserialize;
 use tokio::net::TcpListener;
-use validator::{Validate, ValidationError};
+use validator::ValidateEmail;
 
 #[allow(dead_code)]
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize)]
 struct User {
-    #[validate(length(min = 2), custom(function = "validate_name"))]
     name: String,
 
-    #[validate(range(min = 18, max = 20, message = "请输入正确范围"))]
     age: u8,
 
-    #[validate(email)]
     email: String,
 
     #[serde(rename = "my_address")]
@@ -32,15 +29,41 @@ async fn main() -> Result<()> {
 }
 
 async fn hello_user_handler(Json(data): Json<User>) -> String {
-    if let Err(e) = data.validate() {
+    if let Err(e) = validate_user(&data) {
         return format!("msg {}", e);
     }
     format!("Hello {:?}", data)
 }
 
-fn validate_name(name: &str) -> Result<(), ValidationError> {
-    if name == "admin" {
-        return Err(ValidationError::new("参数错误"));
+fn validate_user(user: &User) -> Result<(), &'static str> {
+    if user.name.chars().count() < 2 {
+        return Err("name length must be at least 2");
+    }
+    if user.name == "admin" {
+        return Err("参数错误");
+    }
+    if !(18..=20).contains(&user.age) {
+        return Err("请输入正确范围");
+    }
+    if !user.email.validate_email() {
+        return Err("email is invalid");
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rejects_invalid_user() {
+        let user = User {
+            name: "a".to_string(),
+            age: 21,
+            email: "bad".to_string(),
+            address: "x".to_string(),
+        };
+
+        assert!(validate_user(&user).is_err());
+    }
 }
