@@ -2,7 +2,7 @@ use ecosystem::hello::{
     greeter_server::{Greeter, GreeterServer},
     HelloReply, HelloRequest,
 };
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{transport::Server, Code, Request, Response, Status};
 
 #[derive(Default)]
 pub struct MyGreeter {}
@@ -14,10 +14,14 @@ impl Greeter for MyGreeter {
         _request: Request<HelloRequest>,
     ) -> Result<Response<HelloReply>, Status> {
         println!("Hello World");
-        let rsp = HelloReply {
+
+        let _rsp = HelloReply {
             message: "Hello".to_string(),
         };
-        Ok(Response::new(rsp))
+
+        Err(Status::new(Code::InvalidArgument, "参数错误"))
+
+        // Ok(Response::new(rsp))
     }
 }
 
