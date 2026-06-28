@@ -1,8 +1,10 @@
+use std::{thread::sleep, time::Duration};
+
 use ecosystem::hello::{
     greeter_server::{Greeter, GreeterServer},
     HelloReply, HelloRequest,
 };
-use tonic::{transport::Server, Code, Request, Response, Status};
+use tonic::{transport::Server, Request, Response, Status};
 
 #[derive(Default)]
 pub struct MyGreeter {}
@@ -15,13 +17,15 @@ impl Greeter for MyGreeter {
     ) -> Result<Response<HelloReply>, Status> {
         println!("Hello World");
 
-        let _rsp = HelloReply {
+        sleep(Duration::from_secs(5));
+
+        let rsp = HelloReply {
             message: "Hello".to_string(),
         };
 
-        Err(Status::new(Code::InvalidArgument, "参数错误"))
+        // Err(Status::new(Code::InvalidArgument, "参数错误"))
 
-        // Ok(Response::new(rsp))
+        Ok(Response::new(rsp))
     }
 }
 

@@ -42,7 +42,7 @@ async-trait = "0.1.83"
 validator = "0.20.0"
 prost = "0.13.4"
 tonic = "0.12.3"
-tower = { version = "0.5.2", features = ["timeout", "util"] }
+tower = { version = "0.5.2", features = ["limit", "timeout", "util"] }
 tonic-web = "0.12.3"
 hyper-util = "0.1.10"
 tower-http = { version = "0.6.2", features = [
