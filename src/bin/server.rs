@@ -1,10 +1,10 @@
-use std::{thread::sleep, time::Duration};
-
 use ecosystem::hello::{
     greeter_server::{Greeter, GreeterServer},
     HelloReply, HelloRequest,
 };
 use tonic::{transport::Server, Request, Response, Status};
+
+// use std::{thread::sleep, time::Duration};
 
 #[derive(Default)]
 pub struct MyGreeter {}
@@ -13,15 +13,17 @@ pub struct MyGreeter {}
 impl Greeter for MyGreeter {
     async fn say_hello(
         &self,
-        _request: Request<HelloRequest>,
+        request: Request<HelloRequest>,
     ) -> Result<Response<HelloReply>, Status> {
         println!("Hello World");
-
-        sleep(Duration::from_secs(5));
 
         let rsp = HelloReply {
             message: "Hello".to_string(),
         };
+
+        println!("{:#?}", request);
+        let value = request.metadata().get("grpc-timeout").unwrap();
+        println!("{:?}", value);
 
         // Err(Status::new(Code::InvalidArgument, "参数错误"))
 
