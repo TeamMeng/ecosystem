@@ -9,13 +9,21 @@ use tonic::{transport::Server, Request, Response, Status};
 #[derive(Default)]
 pub struct MyGreeter {}
 
+#[derive(Clone)]
+pub struct MyExtension {
+    some_piece_of_data: String,
+}
+
 #[tonic::async_trait]
 impl Greeter for MyGreeter {
     async fn say_hello(
         &self,
         request: Request<HelloRequest>,
     ) -> Result<Response<HelloReply>, Status> {
-        println!("Hello World");
+        let extension = request.extensions().get::<MyExtension>().unwrap();
+        println!("extension data = {}", extension.some_piece_of_data);
+
+        // println!("Hello World");
 
         let rsp = HelloReply {
             message: "Hello".to_string(),
@@ -37,9 +45,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let g = MyGreeter::default();
 
     Server::builder()
-        .add_service(GreeterServer::new(g))
+        .add_service(GreeterServer::with_interceptor(g, intercept))
         .serve(addr)
         .await?;
 
     Ok(())
+}
+
+#[allow(clippy::result_large_err)]
+fn intercept(mut req: Request<()>) -> Result<Request<()>, Status> {
+    println!("middleware request: {:#?}", req);
+
+    req.extensions_mut().insert(MyExtension {
+        some_piece_of_data: "foo".to_string(),
+    });
+
+    Ok(req)
 }
