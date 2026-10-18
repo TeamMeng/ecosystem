@@ -1,6 +1,8 @@
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
+use config::{Config, Environment, File};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use std::env;
 
 #[derive(Debug, Deserialize, Clone)]
 struct ChatReply {
@@ -44,6 +46,50 @@ struct ChatCompletionResponse {
     model: String,
     usage: Usage,
     choices: Vec<Choice>,
+}
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum Provider {
+    Deepseek,
+}
+
+#[derive(Debug, Deserialize)]
+struct AppSettings {
+    provider: Provider,
+    model: String,
+    api_key: String,
+    #[serde(default)]
+    base_url: Option<String>,
+}
+
+fn load_settings() -> Result<AppSettings> {
+    dotenvy::dotenv().ok();
+
+    let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "dev".to_string());
+    let raw_config = Config::builder()
+        .set_default("provider", "deepseek")?
+        .set_default("model", "deepsekk-flash")?
+        .add_source(File::with_name(&format!("config/{run_mode}")).required(false))
+        .add_source(Environment::with_prefix("APP").separator("__"))
+        .build()
+        .context("Failed to build layered configuration")?;
+
+    raw_config
+        .try_deserialize()
+        .context("Failed to deserialize configuration into AppSettings")
+}
+
+fn build_client(settings: &AppSettings) -> Box<dyn LlmClient> {
+    match settings.provider {
+        Provider::Deepseek => Box::new(DeepseekClient::new(
+            settings
+                .base_url
+                .clone()
+                .unwrap_or_else(|| "https://api.deepseek.com".to_string()),
+            settings.api_key.clone(),
+            settings.model.clone(),
+        )),
+    }
 }
 
 #[async_trait::async_trait]
@@ -139,18 +185,10 @@ impl LlmClient for DeepseekClient {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    dotenvy::dotenv().ok();
+    let settings = load_settings()?;
+    let ds = build_client(&settings);
 
-    let deepseek_api_key = std::env::var("DEEPSEEK_API_KEY")?;
-
-    let clients: Vec<(&str, Box<dyn LlmClient>)> = vec![(
-        "deepseek-flash",
-        Box::new(DeepseekClient::new(
-            "https://api.deepseek.com/",
-            &deepseek_api_key,
-            "deepseek-flash",
-        )),
-    )];
+    let clients: Vec<(&str, Box<dyn LlmClient>)> = vec![("deepseek-flash", ds)];
 
     for (name, client) in clients.iter() {
         report(name, client.as_ref()).await;

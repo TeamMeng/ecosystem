@@ -1,1 +1,3 @@
-api_key = "sk..."
+provider = "deepseek"
+model = "deepseek-flash"
+base_url = "https://api.deepseek.com/"
