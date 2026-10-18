@@ -68,7 +68,7 @@ fn load_settings() -> Result<AppSettings> {
     let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "dev".to_string());
     let raw_config = Config::builder()
         .set_default("provider", "deepseek")?
-        .set_default("model", "deepsekk-flash")?
+        .set_default("model", "deepseek-flash")?
         .add_source(File::with_name(&format!("config/{run_mode}")).required(false))
         .add_source(Environment::with_prefix("APP").separator("__"))
         .build()
