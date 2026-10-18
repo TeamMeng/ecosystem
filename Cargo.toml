@@ -85,6 +85,7 @@ adk-graph = { version = "1.0.0", features = ["sqlite"] }
 adk-agent = "1.0.0"
 adk-model = "1.0.0"
 adk-core = "1.0.0"
+config = "0.15.27"
 
 [dev-dependencies]
 tracing = "0.1.41"
