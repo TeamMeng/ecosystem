@@ -4,11 +4,21 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
 
+const SYSTEM: &str = "You are a concise Rust teaching assistant.";
+const PROMPT: &str = "Explain Rust ownership in one sentence.";
+
 #[derive(Debug, Deserialize, Clone)]
 struct ChatReply {
     content: String,
     prompt_tokens: u32,
     completion_tokens: u32,
+}
+
+#[derive(Debug, Deserialize, Clone, Default)]
+struct GenerationParams {
+    temperature: Option<f32>,
+    top_p: Option<f32>,
+    max_tokens: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -21,6 +31,12 @@ struct ChatMessage {
 struct ChatCompletionRequest {
     model: String,
     messages: Vec<ChatMessage>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    temperature: Option<f32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    top_p: Option<f32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    max_tokens: Option<u32>,
 }
 
 #[allow(unused)]
@@ -95,18 +111,15 @@ fn build_client(settings: &AppSettings) -> Box<dyn LlmClient> {
 #[async_trait::async_trait]
 trait LlmClient: Send + Sync {
     async fn chat(&self, system_prompt: &str, user_prompt: &str) -> Result<ChatReply>;
-}
 
-async fn report(name: &str, client: &dyn LlmClient) {
-    let system = "You are a concise Rust teaching assistant.";
-    let prompt = "Explain Rust ownership in one sentence.";
-
-    match client.chat(system, prompt).await {
-        Ok(replt) => println!(
-            "[{name}] {} (tokens: {} + {})\n",
-            replt.content, replt.prompt_tokens, replt.completion_tokens
-        ),
-        Err(err) => println!("[{name}] error: {err:#?}\n"),
+    async fn chat_with_params(
+        &self,
+        system_prompt: &str,
+        user_prompt: &str,
+        params: GenerationParams,
+    ) -> Result<ChatReply> {
+        let _ = params;
+        self.chat(system_prompt, user_prompt).await
     }
 }
 
@@ -136,6 +149,16 @@ impl DeepseekClient {
 #[async_trait::async_trait]
 impl LlmClient for DeepseekClient {
     async fn chat(&self, system_prompt: &str, user_prompt: &str) -> Result<ChatReply> {
+        self.chat_with_params(system_prompt, user_prompt, Default::default())
+            .await
+    }
+
+    async fn chat_with_params(
+        &self,
+        system_prompt: &str,
+        user_prompt: &str,
+        params: GenerationParams,
+    ) -> Result<ChatReply> {
         let endpoint = format!("{}/chat/completions", self.base_url);
 
         let request_body = ChatCompletionRequest {
@@ -150,6 +173,9 @@ impl LlmClient for DeepseekClient {
                     content: user_prompt.to_string(),
                 },
             ],
+            temperature: params.temperature,
+            top_p: params.top_p,
+            max_tokens: params.max_tokens,
         };
 
         let response = self
@@ -188,10 +214,22 @@ async fn main() -> Result<()> {
     let settings = load_settings()?;
     let ds = build_client(&settings);
 
+    let params = GenerationParams {
+        temperature: Some(0.7),
+        max_tokens: Some(1024),
+        ..Default::default()
+    };
+
     let clients: Vec<(&str, Box<dyn LlmClient>)> = vec![("deepseek-flash", ds)];
 
     for (name, client) in clients.iter() {
-        report(name, client.as_ref()).await;
+        let result = client
+            .chat_with_params(SYSTEM, PROMPT, params.clone())
+            .await?;
+        println!(
+            "name: [{}] content:{}\n {} {}",
+            name, result.content, result.prompt_tokens, result.completion_tokens
+        );
     }
 
     Ok(())
