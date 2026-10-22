@@ -88,6 +88,7 @@ adk-core = "1.0.0"
 config = "0.15.27"
 async-openai = { version = "0.42.2", features = ["chat-completion"] }
 clap = "4.6.7"
+tokio-stream = "0.1.17"
 
 [dev-dependencies]
 tracing = "0.1.41"
