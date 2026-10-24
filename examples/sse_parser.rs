@@ -1,6 +1,58 @@
 use serde::{Deserialize, Serialize};
-use std::{env, io::Write, time::Duration};
+use std::{
+    env,
+    io::{self, Write},
+    time::Duration,
+};
+use tokio::{sync::oneshot, time::interval};
 use tokio_stream::StreamExt;
+
+struct Spinner {
+    frames: &'static [&'static str],
+    frame_idx: usize,
+}
+
+impl Spinner {
+    pub fn new() -> Self {
+        Self {
+            frames: &[".", "..", "..."],
+            frame_idx: 0,
+        }
+    }
+
+    fn tick(&mut self) -> io::Result<()> {
+        let frame = self.frames[self.frame_idx % self.frames.len()];
+        self.frame_idx += 1;
+        println!("\r等待模型响应{}", frame);
+        io::stdout().flush()
+    }
+
+    fn clear_line(&self) -> io::Result<()> {
+        println!("\r\x1B[K");
+        io::stdout().flush()
+    }
+
+    pub async fn run_until(mut self, mut stop_rx: oneshot::Receiver<()>) -> io::Result<()> {
+        let mut ticker = interval(tokio::time::Duration::from_millis(120));
+        loop {
+            tokio::select! {
+                _ = ticker.tick() => {
+                    self.tick()?;
+                }
+                _ = &mut stop_rx => {
+                        self.clear_line()?;
+                        break;
+                    }
+            }
+        }
+        Ok(())
+    }
+}
+
+pub fn write_delta(delta: &str) -> io::Result<()> {
+    println!("{}", delta);
+    io::stdout().flush()
+}
 
 #[derive(Debug, Serialize)]
 struct Message {
@@ -129,6 +181,9 @@ async fn main() -> anyhow::Result<()> {
         stream: true,
     };
 
+    let (stop_tx, stop_rx) = oneshot::channel();
+    let spinner_handle = tokio::spawn(Spinner::new().run_until(stop_rx));
+
     let response = reqwest::Client::new()
         .post("https://api.deepseek.com/chat/completions")
         .bearer_auth(api_key)
@@ -171,6 +226,9 @@ async fn main() -> anyhow::Result<()> {
     }
 
     println!("\nfull assembled text: {}", full_text);
+
+    let _ = stop_tx.send(());
+    let _ = spinner_handle.await;
 
     Ok(())
 }
