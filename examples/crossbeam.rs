@@ -183,7 +183,7 @@ fn main() {
 mod tests {
     use crossbeam::atomic::AtomicCell;
     use crossbeam::sync::ShardedLock;
-    use crossbeam::thread;
+    use crossbeam::thread as crossbeam_thread;
     use crossbeam_channel::bounded;
     use crossbeam_utils::CachePadded;
     use std::{
@@ -319,7 +319,7 @@ mod tests {
         }
         drop(task_sender);
 
-        thread::scope(|s| {
+        crossbeam_thread::scope(|s| {
             for word_id in 0..4 {
                 let task_receiver = task_receiver.clone();
                 let result_sender = result_sender.clone();
@@ -358,7 +358,7 @@ mod tests {
     fn producer_consumer_example() {
         let (tx, rx) = bounded(10);
 
-        thread::scope(|s| {
+        crossbeam_thread::scope(|s| {
             s.spawn(|_| {
                 for i in 0..20 {
                     println!("producer: {}", i);
